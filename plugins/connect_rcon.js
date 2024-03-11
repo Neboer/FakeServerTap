@@ -1,18 +1,18 @@
 const fp = require('fastify-plugin')
-const { Rcon } = require("rcon-client");
-const { rcon } = require("../config.json")
+const {Rcon} = require("rcon-client");
+const {rcon} = require("../config.json")
 const sleep = require("../utils/sleep")
 
-let rcon_connection = null
+let rcon_connection = {"connection": null}
 
 function wait_rcon_connection_break(logger) {
     return new Promise(resolve => {
-        rcon_connection.once("error", (e) => {
+        rcon_connection.connection.once("error", (e) => {
             logger.error(e, "rcon connection error")
             resolve()
         })
 
-        rcon_connection.once("end", () => {
+        rcon_connection.connection.once("end", () => {
             logger.error("rcon connection ended.")
             resolve()
         })
@@ -22,10 +22,10 @@ function wait_rcon_connection_break(logger) {
 }
 
 async function rcon_connector(logger) {
-    while (!rcon_connection) {
-        while (!rcon_connection) {
+    while (!rcon_connection.connection) {
+        while (!rcon_connection.connection) {
             try {
-                rcon_connection = await Rcon.connect(rcon)
+                rcon_connection.connection = await Rcon.connect(rcon)
                 logger.info("rcon connected!")
             } catch (e) {
                 logger.error(e, "rcon connection failed")

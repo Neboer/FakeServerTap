@@ -4,11 +4,12 @@ const path = require('node:path')
 const AutoLoad = require('@fastify/autoload')
 
 // Pass --options via CLI arguments in command to enable these options.
-const options = {}
+const options = {
+}
 
 module.exports = async function (fastify, opts) {
-    fastify.register(require('@fastify/multipart'), { attachFieldsToBody: true })
-    fastify.register(require('@fastify/websocket'))
+    fastify.register(require('@fastify/formbody'))
+    await fastify.register(require('@fastify/websocket'))
 
     fastify.register(AutoLoad, {
         dir: path.join(__dirname, 'plugins'),

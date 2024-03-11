@@ -8,7 +8,5 @@ module.exports = function parseOnlinePlayers(message) {
     }
 
     const [, , , playerList] = match;
-    const playerNames = playerList.split(', ');
-    
-    return playerNames
+    return playerList.split(', ')
 }
