@@ -17,16 +17,15 @@ function wait_rcon_connection_break(logger) {
             resolve()
         })
     })
-
-
 }
 
 async function rcon_connector(logger) {
-    while (!rcon_connection.connection) {
-        while (!rcon_connection.connection) {
+    while (true) {
+        while (true) {
             try {
                 rcon_connection.connection = await Rcon.connect(rcon)
                 logger.info("rcon connected!")
+                break
             } catch (e) {
                 logger.error(e, "rcon connection failed")
                 await sleep(5000)

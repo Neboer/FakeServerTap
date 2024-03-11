@@ -4,8 +4,11 @@ const parse_online_players = require("../../utils/parse_online_players")
 module.exports = async function (fastify, opts) {
     fastify.get("/players", async (request, reply) => {
         try {
+            fastify.log.info('query online players.')
             const rcon_query_players_result = await fastify.rcon.connection.send("list")
+            fastify.log.info(`query result: ${rcon_query_players_result}`)
             const players = parse_online_players(rcon_query_players_result)
+            fastify.log.info(`online players: ${players}`)
             return players.map(name => ({
                 displayName: name
             }))
