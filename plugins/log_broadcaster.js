@@ -3,6 +3,11 @@ const {svtap} = require("../config.json")
 const fp = require('fastify-plugin')
 const {exit} = require('node:process')
 
+const server_log_formats = {
+    "forge": /^\[.*?] \[.*?] \[.*?]: (.*)$/,
+    "bukkit": /^\[.*?] \[.*?]: (.*)$/,
+    "vanilla": /^\[.*?] \[.*?]: (.*)$/  // TODO: not tested
+}
 
 module.exports = fp(async function (fastify, opts) {
     try {
@@ -10,7 +15,7 @@ module.exports = fp(async function (fastify, opts) {
         tail.watch()
         tail.on("line", data => {
             fastify.log.debug(`receive new line ${data}`)
-            const log_data_match_result = data.match(/^\[.*?] \[.*?] \[.*?]: (.*)$/)
+            const log_data_match_result = data.match(server_log_formats[svtap.server_type])
             if (log_data_match_result) {
                 const msg_text = log_data_match_result[1]
                 const msg_to_send = JSON.stringify({"message": msg_text, "timestampMillis": 0, "loggerName": "", "level": "INFO"})
@@ -21,7 +26,7 @@ module.exports = fp(async function (fastify, opts) {
                     fastify.log.error(e, `error broadcast message ${msg_to_send}`)
                 }
             } else {
-                fastify.log.debug(`unmatched log line ${data}`)
+                fastify.log.info(`unmatched log line ${data}`)
             }
         })
         tail.on("error", e => {

@@ -6,6 +6,7 @@
     },
     "svtap": {
         "secret": "yasdfe",
-        "log_file": "test/latest.log"
+        "log_file": "test/latest.log",
+        "server_type": "forge"
     }
 }

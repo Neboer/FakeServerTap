@@ -1,0 +1,17 @@
+[Unit]
+Description=FakeServerTap Service
+After=network.target StarMC.service
+
+[Service]
+Type=exec
+User=minecraft
+Group=minecraft
+WorkingDirectory=/home/minecraft/FakeServerTap-main
+Environment="PORT=4567"
+Environment="FASTIFY_ADDRESS=0.0.0.0"
+ExecStart=/usr/bin/yarn start
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
